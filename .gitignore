@@ -1,0 +1,17 @@
+license*.json
+*.pyc
+.vendor
+.bundle
+Converging
+TODO
+.idea/
+.DS_Store
+.venv/
+venv/
+__pycache__/
+celerybeat-schedule.db
+static/admin/
+static/drf-yasg/
+static/rest_framework/
+showsql_venv/
+./domainer/db.sqlite3
