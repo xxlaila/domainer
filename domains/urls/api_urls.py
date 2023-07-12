@@ -16,7 +16,7 @@ router = DefaultRouter()
 router.register(r'domain_list', api.DomainListViewSet)
 router.register(r'analysis_list', api.AnalysisListViewSet)
 router.register(r'domain_auth', api.DomainAuditViewSet)
-
+router.register(r'domain_cdn', api.DomainListViewSet)
 
 urlpatterns = [
     path("list/", DomainListAPIView.as_view(), name="domain-list"),

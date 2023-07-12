@@ -12,7 +12,7 @@ from tencentcloud.common.profile.client_profile import ClientProfile
 from tencentcloud.common.profile.http_profile import HttpProfile
 from tencentcloud.common.exception.tencent_cloud_sdk_exception import TencentCloudSDKException
 from tencentcloud.dnspod.v20210323 import dnspod_client, models
-from common.cloud_comm import Tencent_Secret, Tencent_zone
+from showsql.utils.cloud_comm import Tencent_Secret, Tencent_zone
 from domains.models.analysis_list import AnalysisList
 import logging
 from domains.utils.domain_audit import record_audit_logs
@@ -196,8 +196,7 @@ class TencentDomainRecord:
         data.update({"domainid": self.domainid})
         new_data = data
         obj, create = AnalysisList.objects.update_or_create(
-            subdomain=data["subdomain"], secordid=data["secordid"], cloud=data["cloud"],
-            domainid=self.domainid, defaults=data)
+            secordid=data["secordid"], cloud=data["cloud"], domainid=self.domainid, defaults=data)
         if action == "add":
             record_audit_logs(new_data, action)
         if create:

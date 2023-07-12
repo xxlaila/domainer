@@ -12,7 +12,7 @@ from alibabacloud_tea_openapi import models as open_api_models
 from alibabacloud_alidns20150109 import models as alidns_20150109_models
 from alibabacloud_tea_util import models as util_models
 from alibabacloud_tea_util.client import Client as UtilClient
-from common.cloud_comm import Aliyun_Secret
+from showsql.utils.cloud_comm import Aliyun_Secret
 import logging
 from domains.models.analysis_list import AnalysisList
 from domains.utils.domain_audit import record_audit_logs
@@ -168,8 +168,7 @@ class AliyunDomainRecord:
         data.update({"domainid": self.domainid})
         new_data = data
         obj, create = AnalysisList.objects.update_or_create(
-            subdomain=data["subdomain"], secordid=data["secordid"], cloud=data["cloud"],
-            domainid=self.domainid, defaults=data)
+            secordid=data["secordid"], cloud=data["cloud"], domainid=self.domainid, defaults=data)
         if action == "add":
             record_audit_logs(new_data, action)
         if create:

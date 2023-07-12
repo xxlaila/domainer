@@ -8,3 +8,4 @@
 from .analysis_list import *
 from .domain_list import *
 from .domain_audit import *
+from .cdndomain_list import *
