@@ -18,8 +18,7 @@ from showsql.utils.cloud_comm import Aliyun_Secret
 from domains.models.analysis_list import AnalysisList
 import logging
 
-logger = logging.getLogger('Aliyundomains')
-
+logger = logging.getLogger('阿里云域名解析列表')
 
 class AliyunDescribeDomainRecords:
 

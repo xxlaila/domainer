@@ -17,6 +17,9 @@ import json, math
 from showsql.utils.cloud_comm import Aliyun_Secret
 from domains.models.domain_list import DomainList
 from domains.utils.aliyundescribedomainrecords import AliyunDescribeDomainRecords
+import logging
+
+logger = logging.getLogger('阿里云域名列表')
 
 class AliyunDescribeDomains:
 
@@ -53,7 +56,7 @@ class AliyunDescribeDomains:
             response_domain_dict = response.body.to_map()
             return response_domain_dict
         except Exception as error:
-            print(f"Error occurred: {error}")
+            logger.error(f"Error occurred: {error}")
 
     def assemble_database(self):
         result = self.get_data_list(page_number=1)
@@ -89,8 +92,7 @@ class AliyunDescribeDomains:
                                                                   punycode=data["punycode"], domainid=data["domainid"],
                                                                   defaults=data)
                 if create:
-                    message = "{} 新增成功".format(data['punycode'], data["cloud"])
+                    logger.info(f"{data['punycode']} {data['cloud']}新增成功")
                 else:
-                    message = "{} 更新成功".format(data['punycode'], data["cloud"])
-                print(message)
+                    logger.info(f"{data['punycode']} {data['cloud']} 更新成功")
                 AliyunDescribeDomainRecords(data["name"], data["domainid"], data["cloud"]).assemble_database()

@@ -46,7 +46,7 @@ class CdnDomainList:
             return json.loads(resp.to_json_string())
 
         except TencentCloudSDKException as err:
-            logger.error("获取ecnd 列表失败 {}".format(str(err)))
+            logger.error(f"获取ecnd 列表失败 {str(err)}")
 
     def wirte_database(self):
         result = self.get_cnd_domain()
@@ -60,8 +60,8 @@ class CdnDomainList:
                 cloud=data["cloud"], resourceid=data["resourceid"], domain=data["domain"],
                 cname=data["cname"], defaults=data)
             if create == True:
-                logger.info("{} 新增成功".format(data['domain'], data["cloud"]))
+                logger.info(f"{data['domain']} {data['cloud']} 新增成功")
             else:
-                logger.info("{} 更新成功".format(data['domain'], data["cloud"]))
+                logger.info(f"{data['domain']} {data['cloud']}更新成功")
 
         return "ok"

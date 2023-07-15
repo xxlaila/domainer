@@ -13,9 +13,24 @@ import logging
 logger = logging.getLogger('audits')
 
 def record_audit_logs(records, action):
+    """
+    记录日志审计
+    :param records:
+    :param action:
+    :return:
+    """
     source_record = ""
     if action == "add":
         source_record = ""
+    elif action == "modify":
+        if int(records['status']) == int(1):
+            status = "ENABLE"
+        else:
+            status = "DISABLE"
+        source_record = f"域名: {records['domain_name']}, 域名id: {records['domainid']}, " \
+                        f"线路: {records['line']}, 名称: {records['subdomain']}, " \
+                        f"secordid: {records['secordid']}, 备注: {records['remark']}, " \
+                        f"状态: {status}, 类型: {records['type']}, 解析值: {records['value']}"
     else:
         result = AnalysisList.objects.filter(domainid=records["domainid"], secordid=records["secordid"],
                                              cloud=records["cloud"]).values()
@@ -30,6 +45,17 @@ def record_audit_logs(records, action):
     news_record = ""
     if action == "delete":
         news_record = ""
+    elif action == "modify":
+        result = AnalysisList.objects.filter(domainid=records["domainid"], secordid=records["secordid"],
+                                             cloud=records["cloud"]).values().first()
+        if int(result['status']) == int(1):
+            status = "ENABLE"
+        else:
+            status = "DISABLE"
+        news_record = f"域名: {result['domain_name']}, 域名id: {result['domainid']}, " \
+                        f"线路: {result['line']}, 名称: {result['subdomain']}, " \
+                        f"secordid: {result['secordid']}, 备注: {result['remark']}, " \
+                        f"状态: {status}, 类型: {result['type']}, 解析值: {result['value']}"
     else:
         if int(records['status']) == int(1):
             status = "ENABLE"
@@ -43,6 +69,7 @@ def record_audit_logs(records, action):
                 "secordid": records["secordid"], "source_record": source_record, "news_record": news_record,
                 "action": action, "created_by": records["created_by"]}
         DomainAudit.objects.create(**data)
+        logger.info(f"添加审计日志成功: {data['name']}, {data['secordid']}, {data['domainid']}")
     except Exception as e:
-        logger.error("添加审计日志报错: {}".format(str(e)))
-        return "添加审计日志报错: {}".format(str(e))
+        logger.error(f"添加审计日志报错: {str(e)}")
+        return f"添加审计日志报错: {str(e)}"

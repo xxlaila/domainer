@@ -50,7 +50,7 @@ class DescribeRecordList:
             return json.loads(resp.to_json_string())
 
         except TencentCloudSDKException as err:
-            logger.error("腾讯云获取域名解析列表失败: {}".format(str(err)))
+            logger.error(f"腾讯云获取域名解析列表失败: {str(err)}")
 
     def assemble_database(self):
         result = self.get_data_list(offset=0)

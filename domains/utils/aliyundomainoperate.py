@@ -18,7 +18,7 @@ from domains.models.analysis_list import AnalysisList
 from domains.utils.domain_audit import record_audit_logs
 from rest_framework.exceptions import ValidationError
 
-logger = logging.getLogger('Aliyundomains')
+logger = logging.getLogger('阿里云域名解析操作')
 
 class AliyunDomainRecord:
 
@@ -80,10 +80,10 @@ class AliyunDomainRecord:
                 except Exception as e:
                     return e
             else:
-                return "阿里云新增域名未知的错误: {}".format(str(res))
+                return f"阿里云新增域名未知的错误: {str(res)}"
         except Exception as error:
             # 如有需要，请打印 error
-            logger.error("添阿里云添加域名解析报错: {}".format(str(error)))
+            logger.error(f"添阿里云添加域名解析报错: {str(error)}")
 
     # 修改域名解析记录
     def modify_record_domain(self):
@@ -101,12 +101,18 @@ class AliyunDomainRecord:
             response = client.update_domain_record_with_options(update_domain_record_request, runtime)
             res = response.body.to_map()
             if "RecordId" in res:
-                self.update_record_remark(res["RecordId"])
-                self.domain_recordinfo(res["RecordId"])
+                self.update_record_remark(res["RecordId"], action="modify")
+                self.domain_recordinfo(res["RecordId"], action="modify")
                 return res["RecordId"]
         except Exception as error:
             # 如有需要，请打印 error
-            logger.error("阿里云修改域名解析报错: {}".format(str(error)))
+            if "DomainRecordDuplicate" in str(error):
+                error_response = error.args[0]
+                self.update_record_remark(secordid=self.secordid, action="modify")
+                obj = self.domain_recordinfo(secordid=self.secordid, action="modify")
+                return obj
+            else:
+                logger.error(f"阿里云修改域名解析报错: {str(error)}")
 
     # 修改域名解析备注
     def update_record_remark(self, secordid='', action=''):
@@ -122,7 +128,7 @@ class AliyunDomainRecord:
             return response.body.to_map()
         except Exception as error:
             # 如有需要，请打印 error
-            logger.error("阿里云修改域名备注错误: {}".format(str(error)))
+            logger.error(f"阿里云修改域名备注错误: {str(error)}")
 
     # 查询域名解析记录，同时写入数据库
     def domain_recordinfo(self, secordid, action=""):
@@ -138,7 +144,7 @@ class AliyunDomainRecord:
             return res
         except Exception as error:
             # 如有需要，请打印 error
-            logger.error("阿里云查询域名解析记录错误: {}".format(str(error)))
+            logger.error(f"阿里云查询域名解析记录错误: {str(error)}")
 
     def write_records_to_database(self, records, action):
         if "Priority" in records:
@@ -166,10 +172,17 @@ class AliyunDomainRecord:
                 "domain_name": domain_name, "created_by": self.created_by, "editd_by": self.created_by,
                 "demand_by": "", "updatedon": ""}
         data.update({"domainid": self.domainid})
-        new_data = data
+
+        if action == "modify":
+            new_data = AnalysisList.objects.filter(secordid=data["secordid"], cloud=data["cloud"],
+                                                   domainid=self.domainid).values().first()
+        else:
+            new_data = data
         obj, create = AnalysisList.objects.update_or_create(
             secordid=data["secordid"], cloud=data["cloud"], domainid=self.domainid, defaults=data)
         if action == "add":
+            record_audit_logs(new_data, action)
+        else:
             record_audit_logs(new_data, action)
         if create:
             logger.info(f"{data['domain_name']} 新增成功，value={data['value']}")
@@ -206,7 +219,7 @@ class AliyunDomainRecord:
                 return f"error: {res}"
         except Exception as error:
             # 如有需要，请打印 error
-            logger.error("阿里云删除域名解析记录错误: {}".format(str(error)))
+            logger.error(f"阿里云删除域名解析记录错误: {str(error)}")
 
     # 暂停和启用域名解析记录
     def modify_record_status(self):
@@ -246,4 +259,4 @@ class AliyunDomainRecord:
             return res
         except Exception as error:
             # 如有需要，请打印 error
-            logger.error("阿里云修改域名解析记录状态错误: {}".format(str(error)))
+            logger.error(f"阿里云修改域名解析记录状态错误: {str(error)}")

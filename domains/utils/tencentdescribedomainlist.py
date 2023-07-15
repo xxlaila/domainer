@@ -45,7 +45,7 @@ class DescribeDomainList:
             return json.loads(resp.to_json_string())
 
         except TencentCloudSDKException as err:
-            logger.error("腾讯云域名列表获取失败: {}".format(str(err)))
+            logger.error(f"腾讯云域名列表获取失败: {str(err)}")
 
     def wirte_database(self):
         result = self.get_domain_list()
@@ -55,13 +55,13 @@ class DescribeDomainList:
                     "recordCount": key["RecordCount"], "remark": key["Remark"], "searchenginepush": key["SearchEnginePush"],
                     "status": key["Status"], "createdon": key["CreatedOn"], "updatedon": key["UpdatedOn"],
                     "vipautorenew": key["VipAutoRenew"], "cloud": "Tencent"}
-            obj, create = DomainList.objects.update_or_create(cloud=data["cloud"], name=data["name"],
-                                                              punycode=data["punycode"], domainid=data["domainid"],
-                                                              defaults=data)
+            obj, create = DomainList.objects.update_or_create(
+                cloud=data["cloud"], name=data["name"], punycode=data["punycode"], domainid=data["domainid"],
+                defaults=data)
             if create == True:
-                logger.info("{} 新增成功".format(data['punycode'], data["cloud"]))
+                logger.info(f"{data['punycode']} {data['cloud']} 新增成功")
             else:
-                logger.info("{} 更新成功".format(data['punycode'], data["cloud"]))
+                logger.info(f"{data['punycode']} {data['cloud']}更新成功")
             DescribeRecordList(data["name"], data["domainid"], data["cloud"]).assemble_database()
 
         return "ok"

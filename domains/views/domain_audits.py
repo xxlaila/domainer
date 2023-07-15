@@ -36,10 +36,10 @@ class DomainAuditAPIView(APIView):
         return filters
 
     @swagger_auto_schema(
-        operation_summary='新增域名解析获取部分展示数据\n',
+        operation_summary='域名操作日志\n',
         operation_description='有以下几种情况: \n'
                               '1、请求体：get 直接请求\n'
-                              '2、{"domainid": "域名id", "cloud": "云"}\n'
+                              '2、{"domainid": "域名id", "cloud": "云", "domain_name": "可选项，域名精确搜索"}\n'
                               '3、请求成功：{"data":{}, "msg":"success","status":200}\n'
                               '注：要求登录，否则返回 403',
         manual_parameters=[
@@ -49,6 +49,9 @@ class DomainAuditAPIView(APIView):
             openapi.Parameter(
                 name='cloud', in_=openapi.TYPE_STRING, type=openapi.TYPE_STRING,
                 description='云'),
+            openapi.Parameter(
+                name='domain_name', in_=openapi.TYPE_STRING, type=openapi.TYPE_STRING,
+                description='域名'),
         ],
         responses={
             200: openapi.Response(description="成功"),

@@ -32,7 +32,7 @@ class HuaweiCdnDomain:
             response_dict = response.to_dict()
             return response_dict
         except exceptions.ClientRequestException as e:
-            logger.error("获取域名列表报错: {}".format(e.request_id, e.error_msg))
+            logger.error(f"获取域名列表报错: {e.request_id, e.error_msg}")
 
     def wirte_database(self):
         result = self.get_cnd_domain()
@@ -57,8 +57,8 @@ class HuaweiCdnDomain:
                 cloud=data["cloud"], resourceid=data["resourceid"], domain=data["domain"],
                 cname=data["cname"], defaults=data)
             if create == True:
-                logger.info("{} 新增成功".format(data['domain'], data["cloud"]))
+                logger.info(f"{data['domain']} {data['cloud']}新增成功")
             else:
-                logger.info("{} 更新成功".format(data['domain'], data["cloud"]))
+                logger.info(f"{data['domain']} {data['cloud']} 更新成功")
 
         return "ok"

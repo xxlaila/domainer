@@ -79,7 +79,7 @@ class TencentDomainRecord:
                 # self.describe_record(secordid=secordid, action="add")
             return json.loads(resp.to_json_string())
         except TencentCloudSDKException as err:
-            logger.error("腾讯云添加域名解析错误: {}".format(str(err)))
+            logger.error(f"腾讯云添加域名解析错误: {str(err)}")
 
     # 修改域名解析
     def modify_record_domain(self):
@@ -113,7 +113,7 @@ class TencentDomainRecord:
             return json.loads(resp.to_json_string())
 
         except TencentCloudSDKException as err:
-            logger.error("腾讯云修改域名解析错误:{} ".format(str(err)))
+            logger.error(f"腾讯云修改域名解析错误:{str(err)} ")
 
     # 修改域名备注
     def modify_record_remark(self, secordid='', action=''):
@@ -141,7 +141,7 @@ class TencentDomainRecord:
             return json.loads(resp.to_json_string())
 
         except TencentCloudSDKException as err:
-            logger.error("腾讯云修改域名备注错误: {}".format(str(err)))
+            logger.error(f"腾讯云修改域名备注错误: {str(err)}")
 
     # 查询记录
     def describe_record(self, secordid='', action=''):
@@ -168,7 +168,7 @@ class TencentDomainRecord:
             self.write_records_to_database(result["RecordInfo"], action)
             return result["RecordInfo"]
         except TencentCloudSDKException as err:
-            logger.error("腾讯云查询域名详情错误: {}".format(str(err)))
+            logger.error(f"腾讯云查询域名详情错误: {str(err)}")
 
     def parse_records(self, record_list):
         records = []
@@ -194,10 +194,16 @@ class TencentDomainRecord:
                 "demand_by": "", "updatedon": records["UpdatedOn"]}
 
         data.update({"domainid": self.domainid})
-        new_data = data
+        if action == "modify":
+            new_data = AnalysisList.objects.filter(secordid=data["secordid"], cloud=data["cloud"],
+                                                   domainid=self.domainid).values().first()
+        else:
+            new_data = data
         obj, create = AnalysisList.objects.update_or_create(
             secordid=data["secordid"], cloud=data["cloud"], domainid=self.domainid, defaults=data)
         if action == "add":
+            record_audit_logs(new_data, action)
+        else:
             record_audit_logs(new_data, action)
         if create:
             logger.info(f"{data['domain_name']} 新增成功，value={data['value']}")
@@ -235,7 +241,7 @@ class TencentDomainRecord:
             else:
                 return f"error: {res}"
         except TencentCloudSDKException as err:
-            logger.error("腾讯云删除域名解析记录失败: {}".format(str(err)))
+            logger.error(f"腾讯云删除域名解析记录失败: {str(err)}")
 
 
     # 设置解析记录状态
@@ -287,4 +293,4 @@ class TencentDomainRecord:
             return secordid
 
         except TencentCloudSDKException as err:
-            logger.error("腾讯云设置域名记录状态错误: {}".format(str(err)))
+            logger.error(f"腾讯云设置域名记录状态错误: {str(err)}")
