@@ -19,51 +19,33 @@ def record_audit_logs(records, action):
     :param action:
     :return:
     """
+    def get_status_string(status):
+        return "ENABLE" if status == 1 else "DISABLE"
+
+    def format_record(record, status):
+        return f"域名: {record['domain_name']}, 域名id: {record['domainid']}, " \
+               f"线路: {record['line']}, 名称: {record['subdomain']}, " \
+               f"secordid: {record['secordid']}, 备注: {record['remark']}, " \
+               f"状态: {status}, 类型: {record['type']}, 解析值: {record['value']}"
+
     source_record = ""
+    news_record = ""
     if action == "add":
         source_record = ""
     elif action == "modify":
-        if int(records['status']) == int(1):
-            status = "ENABLE"
-        else:
-            status = "DISABLE"
-        source_record = f"域名: {records['domain_name']}, 域名id: {records['domainid']}, " \
-                        f"线路: {records['line']}, 名称: {records['subdomain']}, " \
-                        f"secordid: {records['secordid']}, 备注: {records['remark']}, " \
-                        f"状态: {status}, 类型: {records['type']}, 解析值: {records['value']}"
+        source_record = format_record(records, get_status_string(int(records['status'])))
     else:
         result = AnalysisList.objects.filter(domainid=records["domainid"], secordid=records["secordid"],
-                                             cloud=records["cloud"]).values()
-        if int(result[0]['status']) == int(1):
-            status = "ENABLE"
-        else:
-            status = "DISABLE"
-        source_record = f"域名: {result[0]['domain_name']}, 域名id: {result[0]['domainid']}, " \
-                        f"线路: {result[0]['line']}, 名称: {result[0]['subdomain']}, " \
-                        f"secordid: {result[0]['secordid']}, 备注: {result[0]['remark']}, " \
-                        f"状态: {status}, 类型: {result[0]['type']}, 解析值: {result[0]['value']}"
-    news_record = ""
+                                             cloud=records["cloud"]).values().first()
+        source_record = format_record(result, get_status_string(int(result['status'])))
     if action == "delete":
         news_record = ""
     elif action == "modify":
         result = AnalysisList.objects.filter(domainid=records["domainid"], secordid=records["secordid"],
                                              cloud=records["cloud"]).values().first()
-        if int(result['status']) == int(1):
-            status = "ENABLE"
-        else:
-            status = "DISABLE"
-        news_record = f"域名: {result['domain_name']}, 域名id: {result['domainid']}, " \
-                        f"线路: {result['line']}, 名称: {result['subdomain']}, " \
-                        f"secordid: {result['secordid']}, 备注: {result['remark']}, " \
-                        f"状态: {status}, 类型: {result['type']}, 解析值: {result['value']}"
+        news_record = format_record(result, get_status_string(int(result['status'])))
     else:
-        if int(records['status']) == int(1):
-            status = "ENABLE"
-        else:
-            status = "DISABLE"
-        news_record = f"域名: {records['domain_name']}, 域名id: {records['domainid']}, 线路: {records['line']}, " \
-                      f"名称: {records['subdomain']}, secordid: {records['secordid']}, 备注: {records['remark']}," \
-                      f"状态: {status}, 类型: {records['type']}, 解析值: {records['value']}"
+        news_record = format_record(records, get_status_string(int(records['status'])))
     try:
         data = {"name": records["domain_name"], "domainid": records["domainid"], "cloud": records["cloud"],
                 "secordid": records["secordid"], "source_record": source_record, "news_record": news_record,

@@ -190,15 +190,24 @@ class TencentDomainRecord:
                 "subdomain": records["SubDomain"], "secordid": records["Id"], "remark": records["Remark"],
                 "status": records["Enabled"], "ttl": records["TTL"], "type": records["RecordType"],
                 "value": records["Value"], "weight": records["Weight"], "cloud": "Tencent",
-                "domain_name": domain_name, "created_by": self.created_by, "editd_by": self.created_by,
-                "demand_by": "", "updatedon": records["UpdatedOn"]}
+                "domain_name": domain_name, "demand_by": "", "updatedon": records["UpdatedOn"]}
+        if action == "add":
+            data.update({
+                "created_by": self.created_by,
+                "editd_by": self.created_by,
+            })
+        else:
+            data["editd_by"] = self.created_by
 
         data.update({"domainid": self.domainid})
+
         if action == "modify":
             new_data = AnalysisList.objects.filter(secordid=data["secordid"], cloud=data["cloud"],
                                                    domainid=self.domainid).values().first()
+            new_data.update({"created_by": self.created_by})
         else:
             new_data = data
+            new_data.update({"created_by": self.created_by})
         obj, create = AnalysisList.objects.update_or_create(
             secordid=data["secordid"], cloud=data["cloud"], domainid=self.domainid, defaults=data)
         if action == "add":

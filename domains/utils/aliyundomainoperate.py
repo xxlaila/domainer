@@ -169,15 +169,24 @@ class AliyunDomainRecord:
                 "subdomain": records["RR"], "secordid": records["RecordId"], "remark": remark,
                 "status": status, "ttl": records["TTL"], "type": records["Type"],
                 "value": records["Value"], "weight": weight, "cloud": "Aliyun",
-                "domain_name": domain_name, "created_by": self.created_by, "editd_by": self.created_by,
-                "demand_by": "", "updatedon": ""}
+                "domain_name": domain_name, "demand_by": "", "updatedon": ""}
+        if action == "add":
+            data.update({
+                "created_by": self.created_by,
+                "editd_by": self.created_by
+            })
+        else:
+            data["editd_by"] = self.created_by
+
         data.update({"domainid": self.domainid})
 
         if action == "modify":
             new_data = AnalysisList.objects.filter(secordid=data["secordid"], cloud=data["cloud"],
                                                    domainid=self.domainid).values().first()
+            new_data.update({"created_by": self.created_by})
         else:
             new_data = data
+            new_data.update({"created_by": self.created_by})
         obj, create = AnalysisList.objects.update_or_create(
             secordid=data["secordid"], cloud=data["cloud"], domainid=self.domainid, defaults=data)
         if action == "add":
