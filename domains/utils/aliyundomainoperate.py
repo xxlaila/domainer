@@ -12,7 +12,7 @@ from alibabacloud_tea_openapi import models as open_api_models
 from alibabacloud_alidns20150109 import models as alidns_20150109_models
 from alibabacloud_tea_util import models as util_models
 from alibabacloud_tea_util.client import Client as UtilClient
-from showsql.utils.cloud_comm import Aliyun_Secret
+from common.cloud_comm import Aliyun_Secret
 import logging
 from domains.models.analysis_list import AnalysisList
 from domains.utils.domain_audit import record_audit_logs
@@ -35,6 +35,7 @@ class AliyunDomainRecord:
         self.remark = data["remark"]
         self.secordid = data["secordid"]
         self.line = data["recordline"]
+        self.ttl = data["ttl"]
         self.status = data["status"]
         self.created_by = data["created_by"]
 
@@ -66,6 +67,7 @@ class AliyunDomainRecord:
             rr=self.subdomain,
             type=self.type,
             value=self.value,
+            ttl=int(self.ttl),
             line="default"
         )
         runtime = util_models.RuntimeOptions()
@@ -93,6 +95,7 @@ class AliyunDomainRecord:
             rr=self.subdomain,
             type=self.type,
             value=self.value,
+            ttl=int(self.ttl),
             line="default"
         )
         runtime = util_models.RuntimeOptions()

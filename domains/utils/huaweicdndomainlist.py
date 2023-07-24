@@ -6,7 +6,7 @@
 @Software: PyCharm
 """
 from domains.models.cdndomain_list import CdnDomainsList
-from showsql.utils.cloud_comm import Huawei_Secret
+from common.cloud_comm import Huawei_Secret
 from huaweicloudsdkcore.auth.credentials import GlobalCredentials
 from huaweicloudsdkcdn.v1.region.cdn_region import CdnRegion
 from huaweicloudsdkcore.exceptions import exceptions

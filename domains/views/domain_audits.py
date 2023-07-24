@@ -66,5 +66,5 @@ class DomainAuditAPIView(APIView):
         ser = self.page.paginate_queryset(DomainAuditSerializer(queryset, many=True).data, request)
         count = queryset.count()
         if count == 0:
-            return Response({"code": -1, "msg": "无数据", "data": "null"}, status=200)
+            return Response({"code": 0, "msg": "无数据", "data": []}, status=200)
         return Response({"code": 0, "msg": "success", "data": {"count": count, "results": ser}}, status=200)

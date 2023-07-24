@@ -12,6 +12,7 @@ from django.http import JsonResponse
 import json
 from urllib.parse import unquote_plus
 import logging
+from django.contrib.auth.models import User
 
 logger = logging.getLogger(__name__)
 
@@ -38,18 +39,25 @@ class LoginRequiredMiddleware:
 
     def __call__(self, request):
         old = request.META
+        TOKEN = request.COOKIES.get('TOKEN')
+        if TOKEN and str(TOKEN) == settings.API_TOKEN:
+            try:
+                user = User.objects.get(username=settings.API_USERNAME)
+            except User.DoesNotExist:
+                user = User(username=settings.API_USERNAME, last_name=settings.API_USER_LASTNAME)
+                user.last_login = timezone.now()
+                user.save()
+            request.user = user
+            response = self.get_response(request)
+            return response
         if request.path_info.find('admin') == 1 or request.path_info.find('swagger') == 1:
             if not cache.get(request.COOKIES.get('OA-Hash')):
                 if not request.user.is_authenticated and request.path_info not in self.open_urls:
                     return redirect(self.login_url)
+        elif request.path_info.find('health-check') == 1:
+            return self.get_response(request)
         elif request.path_info.find('receive') > 1:
             return self.get_response(request)
-        # elif "HTTP_REFERER" in old:
-        #     if "swagger" in old["HTTP_REFERER"]:
-        #         if cache.get("HTTP_REFERER"):
-        #             cache.set("HTTP_REFERER", old["HTTP_REFERER"], 1800)
-        #             request.token = cache.get("HTTP_REFERER")
-        #             return self.get_response(request)
         elif "swagger" in old["PATH_INFO"]:
             if cache.get("PATH_INFO"):
                 cache.set("PATH_INFO", old["PATH_INFO"], 1800)

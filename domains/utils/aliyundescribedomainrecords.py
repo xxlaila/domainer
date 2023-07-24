@@ -14,7 +14,7 @@ from alibabacloud_tea_openapi import models as open_api_models
 from alibabacloud_alidns20150109 import models as alidns_20150109_models
 from alibabacloud_tea_util import models as util_models
 from alibabacloud_tea_util.client import Client as UtilClient
-from showsql.utils.cloud_comm import Aliyun_Secret
+from common.cloud_comm import Aliyun_Secret
 from domains.models.analysis_list import AnalysisList
 import logging
 

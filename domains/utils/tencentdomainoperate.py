@@ -12,7 +12,7 @@ from tencentcloud.common.profile.client_profile import ClientProfile
 from tencentcloud.common.profile.http_profile import HttpProfile
 from tencentcloud.common.exception.tencent_cloud_sdk_exception import TencentCloudSDKException
 from tencentcloud.dnspod.v20210323 import dnspod_client, models
-from showsql.utils.cloud_comm import Tencent_Secret, Tencent_zone
+from common.cloud_comm import Tencent_Secret
 from domains.models.analysis_list import AnalysisList
 import logging
 from domains.utils.domain_audit import record_audit_logs
@@ -35,6 +35,7 @@ class TencentDomainRecord:
         self.recordline = data["recordline"]
         self.secordid = data["secordid"]
         self.remark = data["remark"]
+        self.ttl = data["ttl"]
         self.created_by = data["created_by"]
         self.editd_by = data["editd_by"]
         self.demand_by = data["demand_by"]
@@ -67,6 +68,7 @@ class TencentDomainRecord:
                 "RecordType": self.recordtype,
                 "RecordLine": "默认",
                 "Value": self.value,
+                "TTL": int(self.ttl),
                 "Status": "ENABLE"
             }
             req.from_json_string(json.dumps(params))
@@ -103,6 +105,7 @@ class TencentDomainRecord:
                 "RecordLine": "默认",
                 "Value": self.value,
                 "Status": status,
+                "TTL": int(self.ttl),
                 "RecordId": int(self.secordid)
             }
             req.from_json_string(json.dumps(params))

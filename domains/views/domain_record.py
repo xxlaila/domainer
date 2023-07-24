@@ -77,7 +77,7 @@ class DomainDetailsAPIView(APIView):
         domainid = self.request.query_params.get("domainid")
         cloud = self.request.query_params.get("cloud")
         if subdomain:
-            filters &= Q(subdomain__icontains=subdomain)
+            filters &= Q(subdomain=subdomain)
         if domainid:
             filters &= Q(domainid=domainid)
         if cloud:
@@ -115,7 +115,7 @@ class DomainDetailsAPIView(APIView):
         serializer = AnalysisListSerializer(ser, many=True).data
         count = queryset.count()
         if count == 0:
-            return Response({"code": -1, "msg": "无数据", "data": "null"}, status=200)
+            return Response({"code": 0, "msg": "无数据", "data": []}, status=200)
 
         return Response({"code": 0, "msg": "success", "data": {"count": count, "results": serializer}}, status=200)
 
@@ -249,6 +249,11 @@ class DomainAddRecordAPIView(APIView):
             "cloud": request.data.get("cloud"),
             "action": request.data.get("action")
         }
+        if not isinstance(data["ttl"], int):
+            return Response({"code": -1, "msg": "TTL 值不是整型", "data": data}, status=200)
+        if data["ttl"] < 1 or data["ttl"] > 86400:
+            return Response({"code": -1, "msg": "TTL 值不能小于1或大于86400, 默认600", "data": data}, status=200)
+
         if data["cloud"] == "Aliyun":
             data.update({"recordline": "default"})
         elif data["cloud"] == "Tencent":

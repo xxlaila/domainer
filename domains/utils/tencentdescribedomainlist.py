@@ -13,7 +13,7 @@ from tencentcloud.common.profile.http_profile import HttpProfile
 from tencentcloud.common.exception.tencent_cloud_sdk_exception import TencentCloudSDKException
 from tencentcloud.dnspod.v20210323 import dnspod_client, models
 from domains.models.domain_list import DomainList
-from showsql.utils.cloud_comm import Tencent_Secret, Tencent_zone
+from common.cloud_comm import Tencent_Secret
 from domains.utils.tencentdescriberecordlist import DescribeRecordList
 from domains.utils.aliyundescribedomains import AliyunDescribeDomains
 import logging

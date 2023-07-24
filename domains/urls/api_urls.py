@@ -10,6 +10,8 @@ from domains import api
 from django.urls import include, path, re_path
 from domains.views.domain_record import DomainListAPIView, DomainDetailsAPIView, DomainAddRecordAPIView
 from domains.views.domain_audits import DomainAuditAPIView
+from domains.views.domain_export import DomainExportAPIView
+from domains.views.domain_search import DomainSearchApiView
 
 app_name = "domains"
 router = DefaultRouter()
@@ -23,6 +25,8 @@ urlpatterns = [
     path("detail/", DomainDetailsAPIView.as_view(), name="domain-detail"),
     path("record/", DomainAddRecordAPIView.as_view(), name="domain-record"),
     path("domain_audit/", DomainAuditAPIView.as_view(), name="domain-audit"),
+    path("domain_export/", DomainExportAPIView.as_view(), name="domain-export"),
+    path("search/", DomainSearchApiView.as_view(), name="doamin-search"),
 ]
 
 urlpatterns += router.urls

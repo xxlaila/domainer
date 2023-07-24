@@ -12,7 +12,7 @@ from tencentcloud.common.profile.client_profile import ClientProfile
 from tencentcloud.common.profile.http_profile import HttpProfile
 from tencentcloud.common.exception.tencent_cloud_sdk_exception import TencentCloudSDKException
 from tencentcloud.cdn.v20180606 import cdn_client, models
-from showsql.utils.cloud_comm import Tencent_Secret, Tencent_zone
+from common.cloud_comm import Tencent_Secret
 from domains.models.cdndomain_list import CdnDomainsList
 import logging
 
