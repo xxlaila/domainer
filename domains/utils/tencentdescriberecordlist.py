@@ -90,9 +90,8 @@ class DescribeRecordList:
     def write_records_to_database(self, records):
         for data in records:
             obj, create = AnalysisList.objects.update_or_create(
-                lineid=data["lineid"], subdomain=data["subdomain"], line=data["line"],
-                type=data["type"], value=data["value"], domainid=self.domainid, defaults=data)
-
+                subdomain=data["subdomain"], secordid=data["secordid"], cloud=data["cloud"],
+                domainid=self.domainid, defaults=data)
             if create:
                 logger.info(f"{data['domain_name']} 新增成功，value={data['value']}")
             else:
