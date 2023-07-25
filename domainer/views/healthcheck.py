@@ -18,7 +18,7 @@ class HealthCheckAPIView(APIView):
             default_db_conn = connections['default']
             default_db_conn.cursor()
 
-            return Response({"code": 0, "msg": "ok", "data": ""}, status=200)
+            return Response({"code": 0, "msg": "success", "data": ""}, status=200)
         except Exception as e:
             # 数据库连接错误，返回 HTTP 500 响应和错误消息
             return Response({"code": 0, "msg": f"Database connection error: {str(e)}", "data": ""}, status=200)

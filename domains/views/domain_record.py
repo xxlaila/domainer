@@ -18,7 +18,6 @@ from domains.serializers.analysis_list import AnalysisListSerializer
 from domains.utils.tencentdomainoperate import TencentDomainRecord
 from domains.utils.aliyundomainoperate import AliyunDomainRecord
 from rest_framework.exceptions import ValidationError
-import asyncio
 
 import logging
 logger = logging.getLogger(__name__)
@@ -78,7 +77,7 @@ class DomainDetailsAPIView(APIView):
         domainid = self.request.query_params.get("domainid")
         cloud = self.request.query_params.get("cloud")
         if subdomain:
-            filters &= Q(subdomain=subdomain)
+            filters &= Q(subdomain__icontains=subdomain)
         if domainid:
             filters &= Q(domainid=domainid)
         if cloud:
@@ -230,7 +229,7 @@ class DomainAddRecordAPIView(APIView):
             }
         )
     )
-    async def post(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         data = {
             "name": request.data.get("name"),
             "domain_name": request.data.get("domain_name"),
@@ -264,7 +263,7 @@ class DomainAddRecordAPIView(APIView):
         check = DomainList.objects.filter(name=data["name"], domainid=data["domainid"], cloud=data["cloud"])
         if check:
             try:
-                obj = await asyncio.to_thread(doamin_action(data))
+                obj = doamin_action(data)
             except ValidationError as e:
                 return Response(e.detail, status=200)
             if obj:

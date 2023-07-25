@@ -11,4 +11,4 @@ from rest_framework.response import Response
 class DashboradApiView(APIView):
 
     def get(self, request, *args, **kwargs):
-        return Response({"code": 0, "msg": "欢迎使用域名管理平台", "data": ""}, status=200)
+        return Response({"code": 0, "msg": "success", "data": "欢迎使用域名管理平台"}, status=200)
