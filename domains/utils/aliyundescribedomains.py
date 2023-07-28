@@ -59,14 +59,18 @@ class AliyunDescribeDomains:
             logger.error(f"Error occurred: {error}")
 
     def assemble_database(self):
-        result = self.get_data_list(page_number=1)
-        subdomain_count = result["TotalCount"]
-        self.write_records_to_database(result["Domains"])
-        if subdomain_count > 100:
-            total = math.ceil(subdomain_count / 100) + 1
-            for page_number in range(2, total):
-                result = self.get_data_list(page_number=page_number)
-                self.write_records_to_database(result["Domains"])
+        try:
+            result = self.get_data_list(page_number=1)
+            subdomain_count = result["TotalCount"]
+            self.write_records_to_database(result["Domains"])
+            if subdomain_count > 100:
+                total = math.ceil(subdomain_count / 100) + 1
+                for page_number in range(2, total):
+                    result = self.get_data_list(page_number=page_number)
+                    self.write_records_to_database(result["Domains"])
+        except Exception as e:
+            logger.error(f"阿里云获取域名解析列表错误: {e}")
+            return "no"
 
     def write_records_to_database(self, result):
         for domain in result["Domain"]:
@@ -78,21 +82,23 @@ class AliyunDescribeDomains:
                 updatedon = domain["InstanceEndTime"]
             else:
                 updatedon = ""
-            data = {"effectivedns": domain["DnsServers"]["DnsServer"], "domainid": domain["DomainId"],
-                    "createdon": domain["CreateTime"], "name": domain["DomainName"], "punycode": domain["PunyCode"],
-                    "recordCount": domain["RecordCount"], "owner": owner, "isvip": "",
-                    "remark": "", "searchenginepush": "", "status": "", "updatedon": updatedon,
-                    "vipautorenew": "", "cloud": "Aliyun"}
+
+            data = {"cloud": "Aliyun", "name": domain["DomainName"], "punycode": domain["PunyCode"],
+                    "domainid": domain["DomainId"]}
+
+            defaults = {"effectivedns": domain["DnsServers"]["DnsServer"], "createdon": domain["CreateTime"],
+                        "recordCount": domain["RecordCount"], "owner": owner, "isvip": "", "remark": "",
+                        "searchenginepush": "", "status": "", "updatedon": updatedon, "vipautorenew": "", }
 
             obj = DomainList.objects.filter(cloud="Tencent", name=data["name"], punycode=data["punycode"])
             if obj.exists():
                 pass
             else:
-                obj, create = DomainList.objects.update_or_create(cloud=data["cloud"], name=data["name"],
-                                                                  punycode=data["punycode"], domainid=data["domainid"],
-                                                                  defaults=data)
+                obj, create = DomainList.objects.update_or_create(
+                    cloud=data["cloud"], name=data["name"], punycode=data["punycode"], domainid=data["domainid"],
+                    defaults=defaults)
                 if create:
                     logger.info(f"{data['punycode']} {data['cloud']}新增成功")
+                    AliyunDescribeDomainRecords(data["name"], data["domainid"], data["cloud"]).assemble_database()
                 else:
                     logger.info(f"{data['punycode']} {data['cloud']} 更新成功")
-                AliyunDescribeDomainRecords(data["name"], data["domainid"], data["cloud"]).assemble_database()

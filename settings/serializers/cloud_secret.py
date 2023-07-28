@@ -8,7 +8,7 @@
 
 from rest_framework import serializers
 from settings.models.cloud_secret import Cloud_Secret
-from showsql.models.slow_results import CLOUD_CHOICES
+from settings.models.cloud_secret import CLOUD_CHOICES
 
 class CloudSecretSerializer(serializers.ModelSerializer):
     updated_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True)

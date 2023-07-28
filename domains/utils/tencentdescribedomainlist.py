@@ -48,20 +48,26 @@ class DescribeDomainList:
             logger.error(f"腾讯云域名列表获取失败: {str(err)}")
 
     def wirte_database(self):
-        result = self.get_domain_list()
-        for key in result["DomainList"]:
-            data = {"domainid": key["DomainId"], "effectivedns": key["EffectiveDNS"], "isvip": key["IsVip"],
-                    "name": key["Name"], "owner": key["Owner"], "punycode": key["Punycode"],
-                    "recordCount": key["RecordCount"], "remark": key["Remark"], "searchenginepush": key["SearchEnginePush"],
-                    "status": key["Status"], "createdon": key["CreatedOn"], "updatedon": key["UpdatedOn"],
-                    "vipautorenew": key["VipAutoRenew"], "cloud": "Tencent"}
-            obj, create = DomainList.objects.update_or_create(
-                cloud=data["cloud"], name=data["name"], punycode=data["punycode"], domainid=data["domainid"],
-                defaults=data)
-            if create == True:
-                logger.info(f"{data['punycode']} {data['cloud']} 新增成功")
-            else:
-                logger.info(f"{data['punycode']} {data['cloud']}更新成功")
-            DescribeRecordList(data["name"], data["domainid"], data["cloud"]).assemble_database()
+        try:
+            result = self.get_domain_list()
+            for key in result["DomainList"]:
 
-        return "ok"
+                data = {"cloud": "Tencent", "name": key["Name"], "punycode": key["Punycode"],
+                        "domainid": key["DomainId"]}
+
+                defaults = {"effectivedns": key["EffectiveDNS"], "isvip": key["IsVip"], "owner": key["Owner"],
+                            "recordCount": key["RecordCount"], "remark": key["Remark"], "status": key["Status"],
+                            "searchenginepush": key["SearchEnginePush"], "createdon": key["CreatedOn"],
+                            "updatedon": key["UpdatedOn"], "vipautorenew": key["VipAutoRenew"]}
+                obj, create = DomainList.objects.update_or_create(
+                    cloud=data["cloud"], name=data["name"], punycode=data["punycode"], domainid=data["domainid"],
+                    defaults=defaults)
+                if create:
+                    logger.info(f"{data['punycode']} {data['cloud']} 新增成功")
+                    DescribeRecordList(data["name"], data["domainid"], data["cloud"]).assemble_database()
+                else:
+                    logger.info(f"{data['punycode']} {data['cloud']}更新成功")
+            return "ok"
+        except Exception as e:
+            logger.error(f"处理域名记录时出现异常: {e}")
+            return "no"

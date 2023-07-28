@@ -6,6 +6,4 @@
 @Software: PyCharm
 """
 from .cloud_secret import *
-from .zone import *
-from .qywx_robot import *
 from .additive_solution import *

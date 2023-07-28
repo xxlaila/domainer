@@ -12,14 +12,11 @@ from django.urls import include, path
 
 app_name = "settings"
 router = DefaultRouter()
-router.register(r'zone', api.zoneViewSet)
 router.register(r'cloud_secret', api.CloudSecretViewSet)
-router.register(r'qywx_robot', api.QywxRobotViewSet)
 # router.register(r'rpcrypt', api.AdditiveSolutionViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
-
 ]
 
 urlpatterns += router.urls

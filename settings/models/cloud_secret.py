@@ -10,16 +10,23 @@ from django.db import models
 import logging
 import uuid
 from django.urls import reverse
-from showsql.models.slow_results import CLOUD_CHOICES
+
+CLOUD_CHOICES = (
+    ("Tencent", "腾讯云"),
+    ("Huawei", "华为云"),
+    ("Aliyun", "阿里云")
+)
 
 __all__ = ['Cloud_Secret']
 logger = logging.getLogger(__name__)
 
 class Cloud_Secret(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True)
-    name = models.CharField(choices=CLOUD_CHOICES, default='tencent', db_index=True, max_length=32, verbose_name=('所属云'))
-    secretid = models.CharField(null=True, blank=True, max_length=256, verbose_name=('SecretId'))
-    secretkey = models.CharField(null=True, blank=True, max_length=256, verbose_name=('SecretKey'))
+    name = models.CharField(choices=CLOUD_CHOICES, default='tencent', db_index=True, max_length=32,
+                            verbose_name="所属云")
+    secretid = models.CharField(null=True, blank=True, max_length=256, verbose_name="SecretId")
+    secretkey = models.CharField(null=True, blank=True, max_length=256, verbose_name="SecretKey")
+    tags = models.CharField(null=True, blank=True, max_length=128, verbose_name="标签")
     comment = models.TextField(blank=True, verbose_name=('备注'))
     created_by = models.CharField(max_length=128, blank=True, default='', verbose_name=('创建人'))
     updated_time = models.DateTimeField(auto_now=True, verbose_name="更新时间")
