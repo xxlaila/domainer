@@ -43,7 +43,7 @@ class TencentDomainRecord:
     # 判断域名是否唯一
     def determine_domain_unique(self):
         domain_name = f"{self.subdomain}.{self.name}"
-        obj = AnalysisList.objects.filter(domain_name=domain_name).values()
+        obj = AnalysisList.objects.filter(domain_name=domain_name, value=self.value).values()
         if obj:
             raise ValidationError({"code": -1, "msg": "域名存在，请勿重复添加", "data": self.data})
         else:
