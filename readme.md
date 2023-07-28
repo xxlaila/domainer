@@ -39,3 +39,6 @@ create database domainer default character set utf8mb4 collate utf8mb4_unicode_c
 create user 'domainer'@'%' identified by 'domainer'
 grant all on domainer.* to 'domainer'@'%';
 ```
+
+## 前端目录
+./frontend
