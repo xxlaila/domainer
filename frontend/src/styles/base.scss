@@ -1,0 +1,17 @@
+/* semantic color variables for this project */
+:root {
+  --color-background: #ffffff;
+  --section-gap: 160px;
+  --primary-padding: 16px;
+
+  // 重置app样式
+  --ac-color-primary: rgb(79, 122, 253);
+  --ac-text-color-primary: rgba(80, 80, 80, 1);
+  --ac-menu-level-padding: 29px;
+}
+
+body {
+  font-family: 'PingFangSC', Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

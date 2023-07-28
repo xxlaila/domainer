@@ -1,0 +1,26 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
+  "exclude": ["node_modules", "public", "src/**/__tests__/*"],
+  "compilerOptions": {
+    "allowJs": true,
+    "target": "esnext",
+    "module": "esnext",
+    "strict": true,
+    "jsx": "preserve",
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "useDefineForClassFields": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "noImplicitAny": false,
+    "types": ["element-plus/global", "unplugin-icons/types/vue"],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}

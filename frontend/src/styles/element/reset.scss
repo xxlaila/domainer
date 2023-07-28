@@ -1,0 +1,102 @@
+// 样式重置
+.dns-main {
+  --dns-main-padding: 0;
+
+  // 按钮
+  .dns-button {
+    &:focus-visible {
+      outline: none;
+    }
+  }
+
+  // 表格样式重置
+  .dns-table {
+    .dns-table__cell {
+      padding: 16px 0;
+    }
+
+    th.dns-table__cell {
+      padding: 15px 0;
+
+      .cell {
+        font-weight: 500;
+      }
+    }
+
+    .cell {
+      line-height: 20px;
+
+      .cell_link {
+        position: relative;
+        text-decoration: none;
+        outline: none;
+        cursor: pointer;
+        vertical-align: middle;
+        padding: 0;
+        font-weight: var(--dns-font-weight-primary);
+        color: var(--dns-color-primary);
+      }
+    }
+  }
+
+  // 分页
+  .dns-pagination.is-background {
+    .btn-prev,
+    .btn-next,
+    .dns-pager li {
+      margin: 0 5px;
+      font-weight: 500;
+    }
+  }
+
+  // drawer
+  .dns-drawer__header {
+    padding-bottom: 22px;
+    background-color: rgba(242, 244, 248, 1);
+    font-size: 16px;
+    margin-bottom: 0;
+  }
+
+  .dns-drawer__body {
+    padding: 16px 24px;
+  }
+
+  .dns-input__wrapper {
+    padding: 1px 16px;
+  }
+
+  .dns-textarea__inner {
+    padding: 8px 16px;
+  }
+
+  // 弹窗
+  .dns-dialog {
+    &__header {
+      background: #f2f4f8;
+      padding-bottom: 22px;
+      margin-right: 0;
+    }
+  }
+}
+
+// 确认弹窗
+.dns-message-box {
+  padding-bottom: 24px;
+  &__header {
+    background: #f2f4f8;
+    padding-bottom: 22px;
+  }
+
+  &__conent {
+    padding: var(--dns-messagebox-padding-primary);
+    padding-top: 16px;
+  }
+
+  &__btns {
+    padding: 0 24px;
+
+    .dns-button {
+      width: 96px;
+    }
+  }
+}

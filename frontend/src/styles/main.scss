@@ -1,0 +1,80 @@
+@use 'element-plus/theme-chalk/src/message.scss';
+@use 'element-plus/theme-chalk/src/message-box.scss';
+@import './normalize.css';
+@import './base.scss';
+
+#app {
+  width: 100vw;
+  height: 100vh;
+}
+
+.m_container_top {
+  background-color: var(--color-background);
+  padding: var(--primary-padding);
+
+  .noc-form-item {
+    margin-bottom: 0;
+  }
+
+  .noc-form--inline .noc-form-item {
+    margin-right: var(--primary-padding);
+  }
+}
+
+.m_container_content {
+  margin-top: 8px;
+  background-color: var(--color-background);
+  padding: var(--primary-padding);
+}
+
+// 详情页公共样式
+.m_event_detail_list {
+  display: grid;
+  grid-template-columns: repeat(3, max-content);
+  justify-content: space-between;
+  padding-right: 60px;
+}
+
+.m_setting_detail_list {
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  justify-content: space-between;
+}
+
+.m_event_detail {
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  grid-auto-rows: min-content;
+  align-items: baseline;
+  column-gap: 12px;
+  row-gap: 16px;
+  font-weight: 400;
+  line-height: 20px;
+  font-size: 14px;
+  color: var(--ac-text-color-primary);
+}
+
+.m_event_detail_key {
+  min-width: 63px;
+  color: rgba(144, 147, 153, 1);
+}
+
+.m_event_detail_value {
+  max-width: 300px;
+}
+
+.m_setting_detail_value {
+  max-width: 150px;
+  word-wrap: break-word;
+}
+
+.m_column_item {
+  width: 160px;
+}
+
+.m_detail_header {
+  font-weight: 500;
+  font-size: 16px;
+  color: #4b5259;
+  line-height: 16px;
+}

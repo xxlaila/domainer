@@ -1,0 +1,68 @@
+// we can add this to custom namespace, default is 'el'
+@forward 'element-plus/theme-chalk/src/mixins/config.scss' with (
+  $namespace: 'dns'
+);
+
+// 样式重置
+@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+  $colors: (
+    'primary': (
+      'base': rgba(79, 122, 253, 1),
+      'placeholder': #bac0c6
+    )
+  ),
+
+  $text-color: (
+    'primary': rgba(80, 80, 80, 1),
+    'regular': rgba(80, 80, 80, 1)
+  ),
+
+  $main: (
+    'padding': 16px
+  ),
+
+  $menu: (
+    'base-level-padding': 22px,
+    'level-padding': 15px,
+    'hover-bg-color': rgba(93, 120, 255, 0.1)
+  ),
+
+  $table: (
+    'border-color': rgba(233, 233, 233, 1),
+    'text-color': rgba(80, 80, 80, 1),
+    'header-text-color': rgba(75, 82, 89, 1),
+    'row-hover-bg-color': rgba(242, 244, 248, 1),
+    'header-bg-color': rgba(242, 244, 248, 1)
+  ),
+
+  $pagination: (
+    'border-radius': 4px,
+    'button-width': 30px,
+    'button-height': 30px,
+    'button-bg-color': rgba(245, 246, 255, 1),
+    'button-color': rgba(96, 98, 102, 1),
+    'button-disabled-color': rgba(192, 196, 204, 1),
+    'button-disabled-bg-color': rgba(245, 246, 255, 1)
+  ),
+
+  $drawer: (
+    'padding-primary': 24px
+  ),
+
+  $common-component-size: (
+    'small': 32px
+  ),
+
+  $messagebox: (
+    'title-color': rgba(75, 82, 89, 1),
+    'width': 540px,
+    'font-size': 16px,
+    'padding-primary': 24px
+  ),
+
+  $card: (
+    'padding': 16px
+  )
+);
+
+@use './reset.scss';
