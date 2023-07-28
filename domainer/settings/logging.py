@@ -8,7 +8,7 @@
 import os
 envir = os.getenv("ENV", "test")
 if envir == "test":
-    BASE_DIR = "/opt/logs/"
+    BASE_DIR = "/data/logs/"
 else:
     BASE_DIR = "/data/logs/"
 
