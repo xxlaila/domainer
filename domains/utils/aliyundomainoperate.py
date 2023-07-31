@@ -17,6 +17,7 @@ import logging
 from domains.models.analysis_list import AnalysisList
 from domains.utils.domain_audit import record_audit_logs
 from rest_framework.exceptions import ValidationError
+from domains.utils.deletedomaincount import delete_domain_count
 
 logger = logging.getLogger('阿里云域名解析操作')
 
@@ -226,6 +227,7 @@ class AliyunDomainRecord:
                            "domain_name": self.domain_name, "value": self.value}
                 record_audit_logs(records, action="delete")
                 AnalysisList.objects.filter(domain_name=self.domain_name, secordid=res["RecordId"]).delete()
+                delete_domain_count(records)
                 return res["RecordId"]
             else:
                 return f"error: {res}"

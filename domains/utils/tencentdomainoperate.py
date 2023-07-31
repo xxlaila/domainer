@@ -18,6 +18,7 @@ import logging
 from domains.utils.domain_audit import record_audit_logs
 from django.db import connection
 from rest_framework.exceptions import ValidationError
+from domains.utils.deletedomaincount import delete_domain_count
 
 logger = logging.getLogger('Tencentdomains')
 
@@ -249,6 +250,7 @@ class TencentDomainRecord:
                 record_audit_logs(records, action="delete")
                 AnalysisList.objects.filter(domain_name=self.domain_name, secordid=self.secordid,
                                             cloud="Tencent").delete()
+                delete_domain_count(records)
                 return res["RequestId"]
             else:
                 return f"error: {res}"
