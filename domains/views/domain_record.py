@@ -249,11 +249,12 @@ class DomainAddRecordAPIView(APIView):
             "cloud": request.data.get("cloud"),
             "action": request.data.get("action")
         }
-        if not isinstance(data["ttl"], int):
+        try:
+            ttl = int(data["ttl"])
+        except ValueError:
             return Response({"code": -1, "msg": "TTL 值不是整型", "data": data}, status=200)
-        if data["ttl"] < 1 or data["ttl"] > 86400:
+        if ttl < 1 or ttl > 86400:
             return Response({"code": -1, "msg": "TTL 值不能小于1或大于86400, 默认600", "data": data}, status=200)
-
         if data["cloud"] == "Aliyun":
             data.update({"recordline": "default"})
         elif data["cloud"] == "Tencent":
