@@ -17,6 +17,7 @@ from common.cloud_comm import Tencent_Secret
 from domains.utils.tencentdescriberecordlist import DescribeRecordList
 from domains.utils.aliyundescribedomains import AliyunDescribeDomains
 import logging
+from domains.models.analysis_list import AnalysisList
 
 logger = logging.getLogger('Tencentdomains')
 
@@ -56,7 +57,7 @@ class DescribeDomainList:
                         "domainid": key["DomainId"]}
 
                 defaults = {"effectivedns": key["EffectiveDNS"], "isvip": key["IsVip"], "owner": key["Owner"],
-                            "recordCount": key["RecordCount"], "remark": key["Remark"], "status": key["Status"],
+                            "remark": key["Remark"], "status": key["Status"],
                             "searchenginepush": key["SearchEnginePush"], "createdon": key["CreatedOn"],
                             "updatedon": key["UpdatedOn"], "vipautorenew": key["VipAutoRenew"]}
                 obj, create = DomainList.objects.update_or_create(
@@ -67,6 +68,8 @@ class DescribeDomainList:
                     DescribeRecordList(data["name"], data["domainid"], data["cloud"]).assemble_database()
                 else:
                     logger.info(f"{data['punycode']} {data['cloud']}更新成功")
+                record_count = AnalysisList.objects.filter(cloud="Tencent", domainid=data["domainid"]).count()
+                DomainList.objects.filter(cloud="Tencent", domainid=data["domainid"]).update(recordCount=record_count)
             return "ok"
         except Exception as e:
             logger.error(f"处理域名记录时出现异常: {e}")

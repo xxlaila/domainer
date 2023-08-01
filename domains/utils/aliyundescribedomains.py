@@ -18,6 +18,7 @@ from common.cloud_comm import Aliyun_Secret
 from domains.models.domain_list import DomainList
 from domains.utils.aliyundescribedomainrecords import AliyunDescribeDomainRecords
 import logging
+from domains.models.analysis_list import AnalysisList
 
 logger = logging.getLogger('阿里云域名列表')
 
@@ -87,11 +88,11 @@ class AliyunDescribeDomains:
                     "domainid": domain["DomainId"]}
 
             defaults = {"effectivedns": domain["DnsServers"]["DnsServer"], "createdon": domain["CreateTime"],
-                        "recordCount": domain["RecordCount"], "owner": owner, "isvip": "", "remark": "",
+                        "owner": owner, "isvip": "", "remark": "",
                         "searchenginepush": "", "status": "", "updatedon": updatedon, "vipautorenew": "", }
 
-            obj = DomainList.objects.filter(cloud="Tencent", name=data["name"], punycode=data["punycode"])
-            if obj.exists():
+            obj = DomainList.objects.filter(cloud="Tencent", name=data["name"], punycode=data["punycode"]).first()
+            if obj is not None:
                 pass
             else:
                 obj, create = DomainList.objects.update_or_create(
@@ -102,3 +103,5 @@ class AliyunDescribeDomains:
                     AliyunDescribeDomainRecords(data["name"], data["domainid"], data["cloud"]).assemble_database()
                 else:
                     logger.info(f"{data['punycode']} {data['cloud']} 更新成功")
+            record_count = AnalysisList.objects.filter(cloud="Aliyun", domainid=data["domainid"]).count()
+            DomainList.objects.filter(cloud="Aliyun", domainid=data["domainid"]).update(recordCount=record_count)
