@@ -31,8 +31,9 @@ class DomainListViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
         serializer = self.get_serializer(queryset, many=True)
+        serializer_data = self.paginate_queryset(serializer.data)
         count = queryset.count()
-        return BaseResponse(code=0, msg="success", data={"count": count, "results": serializer.data},
+        return BaseResponse(code=0, msg="success", data={"count": count, "results": serializer_data},
                             status=status.HTTP_200_OK)
 
     def retrieve(self, request, *args, **kwargs):

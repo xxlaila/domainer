@@ -282,3 +282,8 @@ SESSION_SAVE_EVERY_REQUEST = False  # 是否每次请求都保存Session，默�
 from .logging import LOGGING
 LOGGING_CONFIG = None  # 禁用默认的logging配置
 LOGGING = LOGGING    # 使用自定义的logging配置
+
+# 接口请求用户， 请求token。这部分逻辑是自己写的
+API_TOKEN = "d73b9c8c95627441db6fa544"
+API_USERNAME = "admin"
+API_USER_LASTNAME = ""
