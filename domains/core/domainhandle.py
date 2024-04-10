@@ -5,7 +5,7 @@
 @Author  : xxlaila
 @Software: PyCharm
 """
-import re
+import re, requests
 from domains.models.analysis_list import AnalysisList
 from domains.models.domain_list import DomainList
 from domains.models.domain_list import CLOUD_CHOICES
@@ -25,6 +25,17 @@ class DomainHandle:
         else:
             return self.handle_domain()
 
+    def check_domain(self, domain):
+        try:
+            response = requests.head("http://" + domain)
+            # 检查响应状态码是否在 2xx 范围内，表示请求成功
+            if response.status_code >= 200 and response.status_code < 300:
+                return True, "域名正常"
+            else:
+                return False, "域名请求失败"
+        except Exception as e:
+            return False, str(e)
+
     def handle_ip(self):
         result = AnalysisList.objects.filter(value=self.name).values(
             "line", "subdomain", "status", "value", "domain_name", "domainid")
@@ -39,7 +50,22 @@ class DomainHandle:
             else:
                 return "未查询到该解析记录"
         else:
-            return "未查询到该解析记录"
+            params = {
+                "ip": self.name,
+                "accessKey": "alibaba-inc"
+            }
+            response = requests.post("https://ip.taobao.com/outGetIpInfo", params=params)
+            data = response.json()
+            if response.status_code == 200:
+                result = data.get("data")
+                if result:
+                    msg = f"IP: {result['ip']} \n" \
+                          f"运营商: {result['isp']} \n" \
+                          f"城市: {result['city']} \n" \
+                          f"归属地: {result['region']} \n"
+                    return msg
+            else:
+                return f"查询失败: {self.name}"
 
     def handle_domain(self):
         match = re.match(r"(.*\.)?([^.]+\.[^.]+)$", self.name)
@@ -81,5 +107,11 @@ class DomainHandle:
                                    f"加速服务状态: {status_display}, 云: {cloud_display}")
             else:
                 cnd_ips.append(f"cnd 在华为云和腾讯云不存在，请联系运维配合进行检查")
+
+        is_normal, message = self.check_domain(domain_name)
+        if is_normal:
+            cnd_ips.append(f"域名 {domain_name} 正常\n")
+        else:
+            cnd_ips.append(f"域名 {domain_name} 异常: {message}\n")
 
         return "\n".join(cnd_ips)
