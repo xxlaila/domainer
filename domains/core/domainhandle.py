@@ -110,7 +110,7 @@ class DomainHandle:
 
         is_normal, message = self.check_domain(domain_name)
         if is_normal:
-            cnd_ips.append(f"域名 {domain_name} 正常\n")
+            cnd_ips.append(f"域名 {domain_name} 状态正常\n")
         else:
             cnd_ips.append(f"域名 {domain_name} 异常: {message}\n")
 
