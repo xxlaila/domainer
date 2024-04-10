@@ -53,7 +53,7 @@ SERVICETYPE_CHOICES = (
     ("wholeSite", "全站加速")
 )
 
-STATUS_CHOICES = (
+ECND_STATUS_CHOICES = (
     ("rejected", "域名审核未通过，域名备案过期/被注销导致"),
     ("processing", "部署中"),
     ("configuring", "配置中"),
@@ -71,7 +71,7 @@ class CdnDomainsList(models.Model):
     resourceid = models.CharField(null=True, blank=True, max_length=64, verbose_name="域名ID")
     domain = models.CharField(null=True, blank=True, max_length=256, db_index=True, verbose_name="加速域名")
     cname = models.CharField(null=True, blank=True, max_length=512, db_index=True, verbose_name="CNAME 地址")
-    status = models.CharField(choices=STATUS_CHOICES, max_length=32, verbose_name="加速服务状态")
+    status = models.CharField(choices=ECND_STATUS_CHOICES, max_length=32, verbose_name="加速服务状态")
     servicetype = models.CharField(choices=SERVICETYPE_CHOICES, max_length=32, verbose_name="业务类型")
     origin = models.TextField(null=True, blank=True, verbose_name="源站配置详情")
     origins = models.TextField(null=True, blank=True, verbose_name="回源地址")

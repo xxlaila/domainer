@@ -9,7 +9,8 @@ import re
 from domains.models.analysis_list import AnalysisList
 from domains.models.domain_list import DomainList
 from domains.models.domain_list import CLOUD_CHOICES
-from domains.models.cdndomain_list import CdnDomainsList, STATUS_CHOICES, AREA_CHOICES
+from domains.models.cdndomain_list import CdnDomainsList, ECND_STATUS_CHOICES, AREA_CHOICES
+from domains.models.analysis_list import STATUS_CHOICES
 
 class DomainHandle:
 
@@ -68,12 +69,12 @@ class DomainHandle:
                 "origins", "product", "area", "status", "cloud")
 
             if cdn_records:
-                STATUS_CHOICES_DICT = dict(STATUS_CHOICES)
+                ECND_STATUS_CHOICES_DICT = dict(ECND_STATUS_CHOICES)
                 AREA_CHOICES_DICT = dict(AREA_CHOICES)
                 CLOUD_CHOICES_DICT = dict(CLOUD_CHOICES)
 
                 for cnd in cdn_records:
-                    status_display = STATUS_CHOICES_DICT[cnd['status']]
+                    status_display = ECND_STATUS_CHOICES_DICT[cnd['status']]
                     area_display = AREA_CHOICES_DICT[cnd['area']]
                     cloud_display = CLOUD_CHOICES_DICT[cnd['cloud']]
                     cnd_ips.append(f"所属产品: {cnd['product']}, 加速区域: {area_display}, 回源地址: {cnd['origins']}, "
