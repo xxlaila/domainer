@@ -2,6 +2,7 @@
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import ZMenu from '@/components/ZMenu.vue'
 import ZHeader from '@/components/ZHeader.vue'
+import ChatDialog from './components/ChatDialog.vue';
 </script>
 
 <template>
@@ -18,6 +19,7 @@ import ZHeader from '@/components/ZHeader.vue'
               <component :is="Component"></component>
             </keep-alive>
           </RouterView>
+            <ChatDialog />
         </el-main>
       </el-container>
     </el-container>
