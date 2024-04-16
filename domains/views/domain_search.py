@@ -23,19 +23,17 @@ class DomainSearchApiView(APIView):
                               '2、根据ip查询对应的域名'
                               '3、请求成功：{"data":{}, "msg":"success","status":200}\n'
                               '注：要求登录，否则返回 403',
-        manual_parameters=[
-            openapi.Parameter(
-                name='domain_name', in_=openapi.TYPE_STRING, type=openapi.TYPE_STRING,
-                description='域名')
-        ],
-        responses={
-            200: openapi.Response(description="成功"),
-            404: openapi.Response(description="无数据"),
-        },
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            required=['domain_name'],
+            properties={
+                'domain_name': openapi.Schema(type=openapi.TYPE_STRING, description='域名'),
+            }
+        )
     )
     def post(self, request, *args, **kwargs):
         try:
-            domain = request.data["domain"]
+            domain = request.data["domain_name"]
             result = DomainHandle(domain).select_domain()
             return Response({"code": 0, "msg": "success", "data": result}, status=200)
         except Exception as e:
